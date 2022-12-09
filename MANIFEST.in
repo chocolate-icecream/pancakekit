@@ -1,0 +1,2 @@
+include src/pancakekit/static/css/*.css
+include src/pancakekit/static/js/*.js

@@ -212,9 +212,11 @@ slider.value_changed = cake.show_message
 
 ##### `Paragraph(text: str)`
 
-##### `ImageBox(image: PIL.Image)`
+##### `ImageBox(image: PIL.Image|str)`
 
-##### `ImageCard(image: PIL.Image)`
+- image argument should be PIL.Image or a path to a image file.
+
+##### `ImageCard(image: PIL.Image|str)`
 
 ##### `Table(df: pandas.DataFrame)`
 

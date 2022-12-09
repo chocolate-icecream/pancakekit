@@ -2,7 +2,7 @@ import os, ast
 import traceback
 from typing import Optional, Union, Any
 from ..pancakekit import Topping, Tag
-from ..utils.utils import get_number, pk_wrapped_dict
+from ..utils import get_number, pk_wrapped_dict
 
 class Button(Topping):
     def __init__(self, title:str, style: dict=None, **kwargs):

@@ -1,4 +1,5 @@
 import threading, traceback, os, inspect
+import importlib
 import __main__
 
 def get_number(value):
@@ -63,6 +64,13 @@ def skip_exception(func, *args, error_msg=None, return_value=None, error_return_
 
 def is_mode_interactive():
     return not hasattr(__main__, "__file__")
+
+def import_module_if_available(module_name: str):
+    spec = importlib.util.find_spec(module_name)
+    if spec is None:
+        return None
+    return importlib.import_module(module_name)
+
 
 class pk_wrapped_dict(dict):
     def __init__(self, setitem_callback, *args):

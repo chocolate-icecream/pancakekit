@@ -1,14 +1,16 @@
-from pancakekit import Topping, Tag
-from pancakekit.utils import *
-from collections.abc import Iterable     
-import pandas as pd
+from ..pancakekit import Topping, Tag
+from ..utils import *
+from collections.abc import Iterable  
+import pandas as pd   
 
 class Table(Topping):
+    pd = None
     HEIGHT_SHRINK = 0.9
-    
+    def __init__(self, df=None, header=None, height:float=0.5, **kwargs):
+        super().__init__(df, header, height, **kwargs)
+
     def prepare(self, df=None, header=None, height=0.5):
-        if df is None:
-            df = pd.DataFrame()
+        df = pd.DataFrame()
         self.height = height
         self.header = None
         self.df = None
