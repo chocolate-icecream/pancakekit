@@ -5,14 +5,18 @@ from ..pancakekit import Topping, Tag
 from ..utils.utils import get_number, pk_wrapped_dict
 
 class Button(Topping):
-    def __init__(self, title:str, **kwargs):
-        super().__init__(title, **kwargs)
+    def __init__(self, title:str, style: dict=None, **kwargs):
+        super().__init__(title, style, **kwargs)
         self.clicked = lambda :None
 
-    def prepare(self, title):
+    def prepare(self, title, style):
         self.value = title
         properties = {"class": "button"}
-        self.button = Tag("button", properties, value_ref=self)
+        
+        base_style = {}
+        if style is not None:
+            base_style.update(style)
+        self.button = Tag("button", properties, style=base_style, value_ref=self)
         
     def html(self):
         self.button.set_click_response()    
@@ -88,12 +92,12 @@ class Input(Topping):
         self.value = default if default is not None else ""
         if placeholder is None:
             placeholder = default
-
+        style = {"max-width": "12em", "padding-bottom":"2px", "padding-top":"2px"}
         self.user_input = Tag("input", {"class": "w3-input w3-border w3-round-large", "type": "text", "placeholder": placeholder}, value_ref=self)
-        self.user_input.style = {"padding-bottom":"2px", "padding-top":"2px"}
+        self.user_input.style = style
 
     def html(self):
-        div = Tag("div")
+        div = Tag("div", style={"display": "flex", "flex-flow": "column"})
         if self.label is not None:
             label = div.add("div", {"class": "w3-left w3-small w3-monospace"})
             label.add_html(self.label)
@@ -166,7 +170,7 @@ class DictInput(Topping):
         if not isinstance(d, dict):
             return
         if not self.horizontal:
-            grid = self.add(Row(centering=False))
+            grid = self.add(Row(centering=False, padding=False))
         else:
             grid = self.add(Column())
         for key, value in d.items():
@@ -175,7 +179,7 @@ class DictInput(Topping):
 
     def html(self):
         border = "" if len(self.input_dict) <= 2 or self.horizontal else ' w3-border w3-round-large'
-        div = Tag("div", {"class": f"w3-container{border}"})
+        div = Tag("div", {"class": f"w3-container{border}"}, style={"width": "fit-content", "padding-bottom":"6px", "margin": "5px"})
         div.add_html(self.children_html)
         return div.render()
 

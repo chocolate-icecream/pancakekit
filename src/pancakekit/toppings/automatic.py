@@ -16,7 +16,7 @@ class FromFunction(DictInput):
             self.arg_dict[param.name] = param.default if param.default != inspect.Parameter.empty else 0
         super().prepare(self.arg_dict)
         title = function.__name__ if not isinstance(function, LambdaType) else "lambda"
-        button = self.add(Button(title))
+        button = self.add(Button(title, style={"display": "flex"}))
         button.clicked = self.call_function
     
     def call_function(self):

@@ -173,11 +173,19 @@ cake(cake.toppings) # In the magic card, the direct call of cake() pops up a mes
 
 ##### `Button(title: str)`
 
+```python
+btn = cake.add(Button("Button"))
+btn.clicked = lambda x: print(x)
+btn.value = "My button"
+```
 
+##### `Input(label: str, default=None, placeholder=None)`
 
-##### `Input(label: str)`
-
-
+```python
+myinput = cake.add(Input("input", default=1))
+myinput.value_changed = lambda x: print(x)
+myinput.value += 1
+```
 
 ##### `DictInput(input_dict: dict)`
 
@@ -189,7 +197,12 @@ print(dict_input["a"]) # -> 1
 dict_input.value_changed = cake.show_message
 ```
 
-##### `Slider(key: str, range_min: float, range_max: float)`
+##### `Slider(key: str, range_min: float, range_max: float, value: float=None)`
+
+```python
+slider = cake.add(Slider("myslider", range_min=0, range_max=10, value=5))
+slider.value_changed = cake.show_message
+```
 
 ### Toppings for display
 
