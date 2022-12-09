@@ -151,7 +151,7 @@ cake["a"].value_changed = lambda: cake.show_message(cake.a)
 More conveniently, execute
 
 ```shell
-python -m pancakekit
+python3 -m pancakekit
 ```
 
 where the `cake` object and all the toppings in `pancakekit` have already been loaded as local variables.

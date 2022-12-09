@@ -10,13 +10,13 @@ import queue
 import inspect
 import importlib
 import re
-from watchdog.events import FileSystemEventHandler
-from watchdog.observers import Observer
 import webbrowser
 import functools
 
 from flask import Flask, jsonify
 import flask
+# from watchdog.events import FileSystemEventHandler
+# from watchdog.observers import Observer
 
 from jinja2 import Template
 
@@ -35,14 +35,14 @@ def temp_path(*path):
     return os.path.join(PANCAKE_TEMP_DIR, *path)
 
 
-class PancakeChangeHandler(FileSystemEventHandler):
-    def __init__(self, file_path, callback_func):
-        self.file_path = file_path
-        self.callback_func = callback_func
-        super().__init__()
-    def on_modified(self, event):
-        if event.src_path == self.file_path:
-            self.callback_func()
+# class PancakeChangeHandler(FileSystemEventHandler):
+#     def __init__(self, file_path, callback_func):
+#         self.file_path = file_path
+#         self.callback_func = callback_func
+#         super().__init__()
+#     def on_modified(self, event):
+#         if event.src_path == self.file_path:
+#             self.callback_func()
 
 class RecipeBook:
     def __init__(self, plate:object, recipes:list=None):
@@ -1209,65 +1209,6 @@ class Topping():
     def value_getter(self): # Method to be overrode for a custom topping
         return self._value
 
-class TapArea(Topping):
-    def prepare(self, label):
-        self.set_value(label, skip_update=True)
-        attributes = self.attributes.copy()
-        if "align" in self.arguments:
-            if "style" not in attributes:
-                attributes["style"] = ""
-            attributes["style"] += "text-align:{self.arguments['align']};"
-        self.div = Tag("div", self.attributes, value_ref=self)
-        
-    def html(self):
-        div = Tag("div", {"class": "w3-container w3-cell w3-cell-middle w3-card"}, style={"width":"350px", "height":"200px"})
-        div.add(self.div)
-        if self.clicked:
-            if "onclick" not in div.properties:
-                div.set_click_response()
-        return div.render()
-
-
-class FileInput(Topping):
-    def prepare(self):
-        self.set_value("", skip_update=True)
-        self.path_label = Tag("div", {"class": "w3-left w3-small w3-monospace"}, name="path_label", value_ref=self)
-        self.file_input = Tag("input", {"class": "w3-input w3-border w3-round-large", "type": "text", "placeholder": "Drag a file to get the file path"}, name="file_input")
-        
-    def html(self):
-        div = Tag("div")
-        div.add(self.path_label)
-        div.add(self.file_input)
-        return div.render()
-    
-    def html_value(self, tag_name):
-        if tag_name == "path_label":
-            return self.folder
-        return self.filename
-    
-    def web_value_preprocessor(self, tag, value):
-        self.set_value(value, skip_update=False)
-        return None
-    
-    def filelist(self, path, descending=False):
-        filelist = [os.path.basename(x) for x in glob.glob(os.path.join(self.folder, path))]
-        filelist.sort(reverse=descending)
-        return filelist
-    @property
-    def folder(self):
-        return os.path.dirname(self.value)
-
-    @property
-    def dirname(self):
-        return self.folder
-
-    @property
-    def filename(self):
-        return os.path.basename(self.value)
-        
-    @property
-    def path(self):
-        return self.value
 
 class Card(Topping):
     ROOT_DIV_CLASS = "draggable w3-card"
