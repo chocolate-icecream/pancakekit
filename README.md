@@ -1,4 +1,4 @@
-## Pancake Kit
+# Pancake Kit
 
 Pancake Kit aims to make adding a user interface to your Python script as easy as a pancake. It provide GUI as a lightweight web app, powered by Flask. Best for daily use!
 
@@ -19,18 +19,18 @@ cake.serve()				# Step 3: Serve the cake.
 
 When you open `http://127.0.0.1:8000/` in a web browser, you will find a input box for entering `n` and a button that invokes `fibonacci()`. Note that what you need to remember is just `add()` and `serve()`.
 
-##### Adding a Python object as a topping
+### Adding a Python object as a topping
 
 In Pancake Kit, a Pancake instance corresponds to a single web page. Each UI component is added to the pancake as a Topping instance. 
 
-###### Dictionary: multiple inputs
+#### Dictionary: multiple inputs
 
 ```python
 d = cake.add({"a": 0, "b": 1})
 d.value_changed = lambda: print(d.value)
 ```
 
-###### String: input
+#### String: input
 
 ```python
 a = cake.add("a") # str
@@ -38,14 +38,14 @@ a.value = 4
 a.value_changed = lambda x: print(x)
 ```
 
-###### Number: text box
+#### Number: text box
 
 ```python
 b = cake.add(0) # number
 b.value = 1
 ```
 
-###### Function: multiple inputs & execution button
+#### Function: multiple inputs & execution button
 
 ```python
 def f(a, b, c):
@@ -62,7 +62,7 @@ def f(a, b, c):
 	return a * b + c
 ```
 
-##### Adding a topping
+### Adding a topping
 
 You can add your favorite toppings to your pancake as in the following example:
 
@@ -84,7 +84,7 @@ cake.serve()
 
 Here, when a `clicked` event is sent to `button_click`, the value of the button is passed as an argument. The value of the topping can be changed by assigning a value to the `value` property.
 
-##### Responding to user actions
+### Responding to user actions
 
 When a user changes the value of the toppings from the browser, the callback function specified by `topping.value_changed` is invoked. 
 
@@ -101,7 +101,7 @@ cake.serve()
 
 Note that `cake.show_message()` will pop up a message in the browser.
 
-##### Accessing a topping by its name
+### Accessing a topping by its name
 
 You can access the toppings in the cake by their names.
 
@@ -119,7 +119,7 @@ cake["slider1"].value_changed = lambda x: setattr(cake["slider0"], "value", x*2)
 cake.serve()
 ```
 
-##### Use Pancake Kit in the interactive mode
+## Use Pancake Kit in the interactive mode
 
 In the interactive mode, you can perform on-site decoration on your pancake.
 
@@ -158,7 +158,7 @@ where the `cake` object and all the toppings in `pancakekit` have been already l
 
 Alternatively, you can use MagicCard to add the toppings.
 
-##### MagicCard
+## MagicCard
 
 By holding down the shift key and pressing the return key, MagicCard appears with a text box. You can execute the code in the textbox by the command/control key + return. The pancake can be referred to as `cake`. Try the following to see if it actually works.
 
