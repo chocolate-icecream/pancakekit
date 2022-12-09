@@ -1,6 +1,6 @@
 # Pancake Kit
 
-Pancake Kit aims to make adding a user interface to your Python script as easy as a pancake. It provide GUI as a lightweight web app, powered by Flask. Best for daily use!
+Pancake Kit aims to make adding a user interface to your Python script as easy as a pancake. It provides GUI as a lightweight web app powered by Flask. Best for daily use!
 
 ## Quick Tasting
 
@@ -17,7 +17,7 @@ cake.add(fibonacci)	# Step 2: Add your function to the pancake.
 cake.serve()				# Step 3: Serve the cake.
 ```
 
-When you open `http://127.0.0.1:8000/` in a web browser, you will find a input box for entering `n` and a button that invokes `fibonacci()`. Note that what you need to remember is just `add()` and `serve()`.
+When you open `http://127.0.0.1:8000/` in a web browser, you will find an input box for entering `n` and a button that invokes `fibonacci()`. Note that what you need to remember is just `add()` and `serve()`.
 
 ### Adding a Python object as a topping
 
@@ -54,7 +54,7 @@ def f(a, b, c):
 cake.add(f)
 ```
 
-Equivalently, you can decorate the function by a decorator `@cake.topping`:
+Equivalently, you can decorate the function with a decorator `@cake.topping`:
 
 ```python
 @cake.topping
@@ -64,7 +64,7 @@ def f(a, b, c):
 
 ### Adding a topping
 
-You can add your favorite toppings to your pancake as in the following example:
+You can add your favorite toppings to your pancake, as in the following example:
 
 ```python
 from pancakekit import Pancake, Button, Label
@@ -137,7 +137,7 @@ d.value_changed = cake.show_message
 # -> As you change the values of the input, you will see a pop-up message.
 ```
 
-As a short-cut of the instantiation & cake.serve(), you can use MagicPancake. The additional feature of the MagicPancake is that you can access the value of a topping by its name.
+As a shortcut to the instantiation & cake.serve(), you can use MagicPancake. The additional feature of the MagicPancake is that you can access the value of a topping by its name.
 
 ```python
 from pancakekit import *
@@ -148,13 +148,13 @@ cake.a = 10
 cake["a"].value_changed = lambda: cake.show_message(cake.a)
 ```
 
-More conveniently, just execute
+More conveniently, execute
 
 ```shell
 python -m pancakekit
 ```
 
-where the `cake` object and all the toppings in `pancakekit` have been already loaded as local variables.
+where the `cake` object and all the toppings in `pancakekit` have already been loaded as local variables.
 
 Alternatively, you can use MagicCard to add the toppings.
 
