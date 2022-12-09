@@ -114,13 +114,13 @@ class Input(Topping):
         return self._value
 
 class Slider(Topping):
-    def __init__(self, label:str, range_min:float, range_max:float, value:Optional[float]=None, **kwargs):
-        super().__init__(label, range_min, range_max, value=value, **kwargs)
+    def __init__(self, label:str, range_min:float, range_max:float, value:Optional[float]=None, step: float=1.0, **kwargs):
+        super().__init__(label, range_min, range_max, value=value, step=step, **kwargs)
 
-    def prepare(self, label, range_min, range_max, value=None):
+    def prepare(self, label, range_min, range_max, value=None, step=1.0):
         self.label_str = label
         self.value_display_func = None
-        self.ranges = (range_min, range_max)
+        self.ranges = (range_min, range_max, step)
         if value is None:
             value = self.ranges[0]
         
@@ -135,6 +135,7 @@ class Slider(Topping):
         label.add_html(self.children_html)
         self.user_input.properties["min"] = self.ranges[0]
         self.user_input.properties["max"] = self.ranges[1]
+        self.user_input.properties["step"] = self.ranges[2]
         div.add(self.user_input)
         return div.render()
     
