@@ -1,10 +1,10 @@
 # Pancake Kit
 
-Pancake Kit aims to make adding a user interface to your Python script as easy as a pancake. It provides GUI as a lightweight web app powered by Flask. Best for daily use!
+Pancake Kit aims to provide a handy user interface to your Python script. It provides GUI as a lightweight web app powered by Flask. 
 
 ## Quick Tasting
 
-The great lesson of pancake cooking is that being simple is awesome. For PancakeKit, you only need to memorize three steps.
+A good lesson of pancake cooking is that being simple is awesome. PancakeKit tries to make GUI preparation as easy as a pancake.
 
 ```python
 from pancakekit import Pancake
@@ -12,12 +12,12 @@ from pancakekit import Pancake
 def fibonacci(n=10):
     return (fibonacci(n-1) + fibonacci(n-2)) if n >= 2 else n
 
-cake = Pancake()		# Step 1: Make a Pancake instance.
+cake = Pancake()	# Step 1: Make a Pancake instance.
 cake.add(fibonacci)	# Step 2: Add your function to the pancake.
-cake.serve()				# Step 3: Serve the cake.
+cake.serve()		# Step 3: Serve the cake.
 ```
 
-When you open `http://127.0.0.1:8000/` in a web browser, you will find an input box for entering `n` and a button that invokes `fibonacci()`. Note that what you need to remember is just `add()` and `serve()`.
+When you open `http://127.0.0.1:8000/` in a web browser, you will find an input box for entering `n` and a button that invokes `fibonacci()`.
 
 ### Adding a Python object as a topping
 
