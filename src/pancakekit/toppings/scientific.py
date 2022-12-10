@@ -1,5 +1,5 @@
 from PIL import Image
-from ..pancakekit import ImageBox
+from . import ImageBox
 from ..utils import *
 
 
