@@ -2,6 +2,12 @@
 
 Pancake Kit aims to provide a handy user interface to your Python script. It provides GUI as a lightweight web app powered by Flask. 
 
+## Installation
+
+```shell
+pip3 install pancakekit
+```
+
 ## Quick Tasting
 
 A good lesson of pancake cooking is that being simple is awesome. PancakeKit tries to make GUI preparation as easy as a pancake.
