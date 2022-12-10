@@ -1,4 +1,4 @@
-from PIL import PILImage
+from PIL import Image
 from ..pancakekit import ImageBox
 from ..utils import *
 
@@ -32,7 +32,7 @@ class ArrayToImageBox(ImageBox):
     def set(self, array=None, range_min=None, range_max=None):
         if isinstance(array, str):
             file_name = array
-            image = PILImage.open(file_name)
+            image = Image.open(file_name)
             if image.mode not in ["L", "I", "F", "I;16", "I;16L", "I;16B", "I;16N"]:
                 image = image.convert("L")
             array = ArrayToImageBox.np.array(image)
@@ -58,7 +58,7 @@ class ArrayToImageBox(ImageBox):
             array = array[self._roi[0]:self._roi[2],self._roi[1]:self._roi[3]]
         
         array = (255*self.colormap((array-range_min)/(range_max - range_min))).astype(ArrayToImageBox.np.uint8)
-        image = PILImage.fromarray(array)
+        image = Image.fromarray(array)
         super().set(image)
     
     def set_range(self, range_min=None, range_max=None):
