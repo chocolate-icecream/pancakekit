@@ -1,6 +1,6 @@
 # Pancake Kit
 
-Pancake Kit aims to provide a handy user interface to your Python script. It provides GUI as a lightweight web app powered by Flask. 
+Pancake Kit aims to provide a handy user interface to your Python codes. It provides GUI as a lightweight web app powered by Flask. 
 
 ## Installation
 
@@ -10,7 +10,7 @@ pip3 install pancakekit
 
 ## Quick Tasting
 
-A good lesson of pancake cooking is that being simple is awesome. PancakeKit tries to make GUI preparation as easy as a pancake.
+Assume that there is a function that calculates the n*th* Fibonacci number. In three steps, you can prepare a GUI that wraps this function.
 
 ```python
 from pancakekit import Pancake
@@ -25,39 +25,35 @@ cake.serve()		# Step 3: Serve the cake.
 
 When you open `http://127.0.0.1:8000/` in a web browser, you will find an input box for entering `n` and a button that invokes `fibonacci()`.
 
-### Adding a Python object as a topping
+### Adding toppings
 
 In Pancake Kit, a Pancake instance corresponds to a single web page. Each UI component is added to the pancake as a Topping instance. 
 
-#### Dictionary: multiple inputs
+#### Values
 
 ```python
-d = cake.add({"a": 0, "b": 1})
-d.value_changed = lambda: print(d.value)
+cake.add({"a": 0, "b": 1})	# Dictionary -> Multiple inputs
+
+cake.add("a:")		# String ends with ":" -> Value input with the string as a label
+
+cake.add("abc")		# String/Number -> Non-editable text
 ```
 
-#### String: input
+#### Special Object
 
 ```python
-a = cake.add("a") # str
-a.value = 4
-a.value_changed = lambda x: print(x)
+cake.add(image)		# PIL.Image/Path string -> Image view
+
+cake.add(df)		# pandas.DataFrame -> Table
 ```
 
-#### Number: text box
-
-```python
-b = cake.add(0) # number
-b.value = 1
-```
-
-#### Function: multiple inputs & execution button
+#### Function
 
 ```python
 def f(a, b, c):
 	return a * b + c
 
-cake.add(f)
+cake.add(f) # Function -> Multiple inputs & execution button
 ```
 
 Equivalently, you can decorate the function with a decorator `@cake.topping`:
@@ -68,7 +64,46 @@ def f(a, b, c):
 	return a * b + c
 ```
 
-### Adding a topping
+## Use Pancake Kit in the interactive mode
+
+In the interactive mode, you can perform on-site decoration on your pancake.
+
+```python
+# On the Terminal or Command Prompt
+from pancakekit import *
+cake = Pancake()
+cake.serve()
+# -> You will find a blank page on http://127.0.0.1:8000/.
+
+d = cake.add({"a": 1, "b":2, "c":3})
+# -> A dictionary input appears on the page immediately.
+
+d.value_changed = cake.show_message
+# -> As you change the values of the input, you will see a pop-up message.
+```
+
+As a shortcut to the instantiation & cake.serve(), you can use MagicPancake. The additional feature of the MagicPancake is that you can access the value of a topping by its name.
+
+```python
+from pancakekit import *
+cake = MagicPancake()
+
+cake.add("myinput", name="a")
+cake.a = 10
+cake["a"].value_changed = lambda: cake.show_message(cake.a)
+```
+
+More conveniently, execute
+
+```shell
+python3 -m pancakekit
+```
+
+where the `cake` object and all the toppings in `pancakekit` have already been loaded as local variables.
+
+## How to
+
+### Adding a PancakeKit topping
 
 You can add your favorite toppings to your pancake, as in the following example:
 
@@ -99,7 +134,7 @@ from pancakekit import *
 
 cake = Pancake()
 
-dict_input = cake.add(DictInput({"a": 1, "b": 2, "c": 3}))
+dict_input = cake.add({"a": 1, "b": 2, "c": 3})
 dict_input.value_changed = lambda: cake.show_message(dict_input.value)
 
 cake.serve()
@@ -124,45 +159,6 @@ cake["slider1"].value_changed = lambda x: setattr(cake["slider0"], "value", x*2)
 
 cake.serve()
 ```
-
-## Use Pancake Kit in the interactive mode
-
-In the interactive mode, you can perform on-site decoration on your pancake.
-
-```python
-# On the Terminal or Command Prompt
-from pancakekit import *
-cake = Pancake()
-cake.serve()
-# -> You will find a blank page on http://127.0.0.1:8000/.
-
-d = cake.add({"a": 1, "b":2, "c":3})
-# -> A DictInput appears on the page immediately.
-
-d.value_changed = cake.show_message
-# -> As you change the values of the input, you will see a pop-up message.
-```
-
-As a shortcut to the instantiation & cake.serve(), you can use MagicPancake. The additional feature of the MagicPancake is that you can access the value of a topping by its name.
-
-```python
-from pancakekit import *
-cake = MagicPancake()
-
-cake.add("myinput", name="a")
-cake.a = 10
-cake["a"].value_changed = lambda: cake.show_message(cake.a)
-```
-
-More conveniently, execute
-
-```shell
-python3 -m pancakekit
-```
-
-where the `cake` object and all the toppings in `pancakekit` have already been loaded as local variables.
-
-Alternatively, you can use MagicCard to add the toppings.
 
 ## MagicCard
 
@@ -218,7 +214,7 @@ slider.value_changed = cake.show_message
 
 ##### `Paragraph(text: str)`
 
-##### `ImageBox(image: PIL.Image|str)`
+##### `ImageView(image: PIL.Image|str)`
 
 - image argument should be PIL.Image or a path to a image file.
 

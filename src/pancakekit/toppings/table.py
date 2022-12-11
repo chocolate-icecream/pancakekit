@@ -9,8 +9,7 @@ class Table(Topping):
     def __init__(self, df=None, header=None, height:float=0.5, **kwargs):
         super().__init__(df, header, height, **kwargs)
 
-    def prepare(self, df=None, header=None, height=0.5):
-        df = pd.DataFrame()
+    def prepare(self, df, header, height=0.5):
         self.height = height
         self.header = None
         self.df = None

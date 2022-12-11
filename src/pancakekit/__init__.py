@@ -3,8 +3,8 @@ from .pancakekit import Plate, Cake, Pancake, Topping, Tag, NameManager, RecipeB
 from .pancakekit import MagicCard, Card, FloatingCard
 
 from .toppings.basic import Button, Label, Text, Input, DictInput, Slider, Row, Column
-from .toppings.image import ImageBox, ImageCard
+from .toppings.image import ImageView, ImageCard
 from .toppings.table import Table
-from .toppings.scientific import ArrayToImageBox
+from .toppings.nparray import ArrayToImageView
 
 from .utils.utils import periodic, new_thread

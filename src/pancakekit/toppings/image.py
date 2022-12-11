@@ -6,7 +6,7 @@ from typing import Any
 from ..pancakekit import Topping, Tag, Card
 
 
-class ImageBox(Topping):
+class ImageView(Topping):
     def prepare(self, image=None, format="png", max_length=500):
         self.image_base64 = None
         self.format = format
@@ -76,7 +76,7 @@ class ImageBox(Topping):
 class ImageCard(Card):
     def prepare(self, *args, **kwargs):
         super().prepare()
-        self.imagebox = self.add(ImageBox(*args, **kwargs))
+        self.imagebox = self.add(ImageView(*args, **kwargs))
     
     def set(self, *args, **kwargs):
         return self.imagebox.set(*args, **kwargs)
