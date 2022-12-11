@@ -29,7 +29,7 @@ When you open `http://127.0.0.1:8000/` in a web browser, you will find an input 
 
 In Pancake Kit, a Pancake instance corresponds to a single web page. Each UI component is added to the pancake as a Topping instance. 
 
-#### Values
+#### Value
 
 ```python
 cake.add({"a": 0, "b": 1})	# Dictionary -> Multiple inputs
@@ -39,7 +39,13 @@ cake.add("a:")		# String ends with ":" -> Value input with the string as a label
 cake.add("abc")		# String/Number -> Non-editable text
 ```
 
-#### Special Object
+#### Value with @decorator
+
+```python
+cake.add("abc@slider(0, 1, 0.1):0.5") # @slider(range_min, range_max, [step])[:value] -> Slider
+```
+
+#### Special object
 
 ```python
 cake.add(image)		# PIL.Image/Path string -> Image view
