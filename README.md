@@ -70,7 +70,7 @@ def f(a, b, c):
 
 ```python
 # @slider(range_min, range_max, [step])[:value] -> Slider
-cake.add("abc@slider(0, 1, 0.1):0.5") 
+cake.add("abc:0.5")
 ```
 
 ## Use Pancake Kit in the interactive mode

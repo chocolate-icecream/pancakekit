@@ -111,8 +111,11 @@ class NameManager:
     def unique_name(self, candidate):
         no_index_if_possible = True
         if not isinstance(candidate, str):
-            candidate = candidate.__class__.__name__.lower()
-            no_index_if_possible = False
+            if hasattr(candidate, "arguments") and "name" in candidate.arguments:
+                candidate = candidate.arguments["name"]
+            else:
+                candidate = candidate.__class__.__name__.lower()
+                no_index_if_possible = False
         
         index_str = re.search(r"\d*$", candidate).group()
         sl = len(index_str)

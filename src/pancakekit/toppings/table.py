@@ -63,12 +63,11 @@ class Table(Topping):
     def event_preprocessor(self, event):
         if event.event_type == "onclick":
             row = event.value['row']
-            value = {self.table[c][row] if row < len(self.table[c]) else None for c in self.headers}
-            
+            value = {c: self.table[c][row] if row < len(self.table[c]) else None for c in self.headers}
             if self.original_type == "list":
                 value = value["-"]
             self.value = (row, value)
-            return value
+            return self.value
     
     def value_getter(self):
         return super().value_getter()

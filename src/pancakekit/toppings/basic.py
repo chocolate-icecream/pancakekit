@@ -4,6 +4,7 @@ from typing import Optional, Union, Any
 from ..pancakekit import Topping, Tag
 from ..utils import get_number, pk_wrapped_dict
 
+
 class Button(Topping):
     def __init__(self, title:str, style: dict=None, **kwargs):
         super().__init__(title, style, **kwargs)
@@ -171,9 +172,9 @@ class DictInput(Topping):
         if not isinstance(d, dict):
             return
         if not self.horizontal:
-            grid = self.add(Row(centering=False, padding=False))
+            grid = self.add(Column(centering=False, padding=False))
         else:
-            grid = self.add(Column())
+            grid = self.add(Row())
         for key, value in d.items():
             label = key.replace("_", " ").capitalize() if len(key) > 1 else key
             self.input_dict[key] = grid.add(Input(label, value, _dict_input_key=key))
@@ -224,14 +225,20 @@ class DictInput(Topping):
             return_str += f"{key}:{item.value}" + os.linesep
         return return_str
 
-class Column(Topping):
+class Row(Topping):
     def __init__(self, toppings:list[Topping]=[], padding:bool=True, **kwargs):
         super().__init__(toppings, padding, **kwargs)
 
     def prepare(self, toppings, padding):
+        self.toppings = []
         self.padding = padding
+        from .automatic import topping_from_object
         for topping in toppings:
+            if not isinstance(topping, Topping):
+                topping = topping_from_object(topping)
+                assert topping is not None
             self.add(topping)
+            self.toppings.append(topping)
         
     def html(self):
         css = "w3-row-padding" if self.padding else "w3-row"
@@ -242,7 +249,7 @@ class Column(Topping):
             column.add_html(child)
         return row.render()
 
-class Row(Topping):
+class Column(Topping):
     def __init__(self, toppings:list[Topping]=[], centering:bool=True, padding:bool=True, **kwargs):
         super().__init__(toppings, centering, padding, **kwargs)
         
