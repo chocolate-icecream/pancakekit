@@ -6,8 +6,7 @@ import inspect
 import functools
 from types import LambdaType
 import re
-from ..utils import get_number
-import pandas as pd
+from ..utils import *
 
 
 class FromFunction(DictInput):
@@ -30,16 +29,16 @@ class FromFunction(DictInput):
             self.cake.show_message(result)
 
 def topping_from_object(obj):
-    if isinstance(obj, dict):
-        return DictInput(obj)
     if isinstance(obj, str):
        return topping_from_string(obj)
     if isinstance(obj, (float, int)):
         return Text(obj, shadow=1, shadow_blur=1)
     if obj.__class__.__module__.startswith("PIL."):
         return  ImageView(obj)
-    if isinstance(obj, pd.DataFrame):
+    if is_pandas_dataframe(obj) or (isinstance(obj, dict) and all([isinstance(value, list) for value in obj.values()])):
         return  Table(obj)
+    if isinstance(obj, dict):
+        return DictInput(obj)
     if inspect.isfunction(obj):
         return FromFunction(obj)
 

@@ -1458,7 +1458,7 @@ class Kitchen(Pancake):
     def show_up(self, request):
         cakes = list(self.plate.pancakes.keys())
         cakes.remove("_Kitchen")
-        self.cakes.set(cakes, header="cake")
+        self.cakes.set({"cake": cakes})
     
     def new_cake(self):
         Pancake(self.plate, name=self.cake_name.value)

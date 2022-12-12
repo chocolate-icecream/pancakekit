@@ -91,6 +91,15 @@ class pk_wrapped_dict(dict):
             return super().__getattribute__(name)
 
 
+def is_pandas_dataframe(obj):
+    if obj.__class__.__module__ == "pandas.core.frame":
+        return True
+    return False
+
+def is_pil_image(obj):
+    if obj.__class__.__module__.startswith("PIL"):
+        return True
+    return False
 
 ### Decorators ###
 

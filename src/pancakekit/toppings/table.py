@@ -1,68 +1,72 @@
 from ..pancakekit import Topping, Tag
 from ..utils import *
-from collections.abc import Iterable  
-import pandas as pd   
+from collections.abc import Iterable   
 
 class Table(Topping):
-    pd = None
     HEIGHT_SHRINK = 0.9
-    def __init__(self, df=None, header=None, height:float=0.5, **kwargs):
-        super().__init__(df, header, height, **kwargs)
+    def __init__(self, table=None, *, height:float=0.5, **kwargs):
+        super().__init__(table, height=height, **kwargs)
 
-    def prepare(self, df, header, height=0.5):
+    def prepare(self, table, *, height):
         self.height = height
-        self.header = None
-        self.df = None
-        self.set(df, header)
+        self.table = None
+        self.num_rows = 0
+        self.headers = []
+        self.original_type = None
+        self.set(table)
         
     
-    def set(self, df, header=None):
-        if df is None:
+    def set(self, table):
+        if table is None:
+            self.table = None
             return
-        if isinstance(df, list):
-            if header is not None:
-                if isinstance(header, str):
-                    df = pd.DataFrame(df, columns=[header])
-                else:
-                    df = pd.DataFrame(df, columns=header)
-            else:
-                df = pd.DataFrame(df)
-        
-        self.df = df
-        if header is None:
-            self.header = self.df.columns
-        elif isinstance(header, Iterable):
-            self.header = header
+        if is_pandas_dataframe(table):
+            table = table.to_dict(orient="list")
+            self.original_type = "pandas"
+        if isinstance(table, list):
+            table = {"-": table}
+            self.original_type = "list"
+
+        assert isinstance(table, dict)
+        self.table = table
+        self.num_rows = max([len(x) for x in table.values()])
+        self.headers = list(table.keys())
         self.updated()
         
     def html(self):
-        if self.df is None or self.header is None:
+        if self.table is None:
             return ""
         style = {"overflow-x": "auto", "overflow-y": "auto", "max-height": f"{self.height*self.HEIGHT_SHRINK*900}px"}
-        div = Tag("div", {"class": "w3-border"}, style=style) #{self.height*self.HEIGHT_SHRINK*100}%
+        div = Tag("div", {"class": "w3-border"}, style=style)
         table = div.add("table", {"class": "w3-table w3-striped w3-bordered w3-hoverable w3-small"})
         thread = table.add("thread")
         tr = thread.add("tr")
-        if isinstance(self.header, str):
-            self.header = [self.header]
-        df = self.df[self.header]
-        for column in df.columns:
-            th = tr.add("th")
-            title = " ".join(column.split("_")).capitalize()
-            if "units" in self.arguments and column in self.arguments["units"]:
-                title += f" ({self.arguments['units'][column]})"
-            th.add_html(title)
-        for i, row in df.iterrows():
+        if self.original_type not in ["list"]:
+            for column in self.headers:
+                th = tr.add("th")
+                title = " ".join(column.split("_")).capitalize()
+                if "units" in self.arguments and column in self.arguments["units"]:
+                    title += f" ({self.arguments['units'][column]})"
+                th.add_html(title)
+        max_row_dict = {c: len(self.table[c]) for c in self.headers}
+        for i in range(self.num_rows):
             tr = table.add("tr")
-            row = row.fillna("---")
             if self.clicked:
                 tr.set_click_response({"row": i})
-            for item in row:
+            for column in self.headers:
                 td = tr.add("td")
+                if i >= max_row_dict[column] or self.table[column][i] is None:
+                    td.add_html("---")
+                    continue
+                item = self.table[column][i]
                 s = get_formatted_number_str(item)
                 td.add_html(s)
         return div.render()
     
     def event_preprocessor(self, event):
         if event.event_type == "onclick":
-            return self.df.loc[event.value['row']]
+            row = event.value['row']
+            row_dict = {self.table[c][row] if row < len(self.table[c]) else None for c in self.headers}
+            if self.original_type == "list":
+                return row_dict["-"]
+            return row_dict

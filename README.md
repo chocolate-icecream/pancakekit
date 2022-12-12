@@ -32,25 +32,21 @@ In Pancake Kit, a Pancake instance corresponds to a single web page. Each UI com
 #### Value
 
 ```python
-cake.add({"a": 0, "b": 1})	# Dictionary -> Multiple inputs
+cake.add({"a": 0, "b": 1})	# Dictionary -> Multiple inputs (DictInput)
 
-cake.add("a:")		# String ends with ":" -> Value input with the string as a label
+# String ends with ":" [+ some value] -> Value input with the string as a label
+cake.add("a:")
+cake.add("b:123")
 
-cake.add("abc")		# String/Number -> Non-editable text
-```
-
-#### Value with @decorator
-
-```python
-cake.add("abc@slider(0, 1, 0.1):0.5") # @slider(range_min, range_max, [step])[:value] -> Slider
+cake.add("abc")	# String/Number -> Non-editable text (Text)
 ```
 
 #### Special object
 
 ```python
-cake.add(image)		# PIL.Image/Path string -> Image view
+cake.add(image)		# PIL.Image/Path string -> ImageView
 
-cake.add(df)		# pandas.DataFrame -> Table
+cake.add(df)		# pandas.DataFrame/Dict of list -> Table
 ```
 
 #### Function
@@ -68,6 +64,13 @@ Equivalently, you can decorate the function with a decorator `@cake.topping`:
 @cake.topping
 def f(a, b, c):
 	return a * b + c
+```
+
+#### Value input with @decorator
+
+```python
+# @slider(range_min, range_max, [step])[:value] -> Slider
+cake.add("abc@slider(0, 1, 0.1):0.5") 
 ```
 
 ## Use Pancake Kit in the interactive mode
