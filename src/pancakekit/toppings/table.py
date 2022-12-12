@@ -13,7 +13,6 @@ class Table(Topping):
         self.headers = []
         self.original_type = None
         self.set(table)
-        
     
     def set(self, table):
         if table is None:
@@ -50,8 +49,7 @@ class Table(Topping):
         max_row_dict = {c: len(self.table[c]) for c in self.headers}
         for i in range(self.num_rows):
             tr = table.add("tr")
-            if self.clicked:
-                tr.set_click_response({"row": i})
+            tr.set_click_response({"row": i})
             for column in self.headers:
                 td = tr.add("td")
                 if i >= max_row_dict[column] or self.table[column][i] is None:
@@ -65,7 +63,12 @@ class Table(Topping):
     def event_preprocessor(self, event):
         if event.event_type == "onclick":
             row = event.value['row']
-            row_dict = {self.table[c][row] if row < len(self.table[c]) else None for c in self.headers}
+            value = {self.table[c][row] if row < len(self.table[c]) else None for c in self.headers}
+            
             if self.original_type == "list":
-                return row_dict["-"]
-            return row_dict
+                value = value["-"]
+            self.value = (row, value)
+            return value
+    
+    def value_getter(self):
+        return super().value_getter()
