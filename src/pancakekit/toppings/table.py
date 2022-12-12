@@ -1,6 +1,5 @@
 from ..pancakekit import Topping, Tag
-from ..utils import *
-from collections.abc import Iterable   
+from ..utils import *  
 
 class Table(Topping):
     HEIGHT_SHRINK = 0.9
