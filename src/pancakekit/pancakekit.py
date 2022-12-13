@@ -588,10 +588,12 @@ class Cake():
         self.toppings[name] = topping
         if not skip_rendering:
             self.topping_order.append(name)
+        return name
     
     def add(self, topping, name=None, storaged=False):
+        assert topping is not None
         topping = input_topping_converter(topping, self.plate.logger)
-        self.register_topping(topping, name=name)
+        name = self.register_topping(topping, name=name)
         topping.set_cake(self, uid=f"{self.name}.{name}", name=name)
         self.plate.refresh()
         return topping

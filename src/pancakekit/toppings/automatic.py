@@ -30,6 +30,12 @@ class FromFunction(DictInput):
             self.cake.show_message(result)
 
 def topping_from_object(obj):
+    if isinstance(obj, tuple):
+        if any([isinstance(x, tuple) for x in obj]):
+            return Row([Column(x) if isinstance(x, tuple) else x for x in obj])
+        return Row(list(obj))
+    if isinstance(obj, list):
+        return topping_from_list(obj)
     if isinstance(obj, str):
        return topping_from_string(obj)
     if isinstance(obj, (float, int)):
@@ -52,6 +58,7 @@ def topping_from_string(obj):
     obj, name_str = m.groups()
     if name_str is not None:
         name_str = name_str[1:].strip() if len(name_str[1:].strip()) > 0 else None
+
 
     m = re.match(r"([^:]*):([\S ^#]*)", obj)
     if m is not None:
@@ -89,11 +96,18 @@ def topping_from_string_slider(m, value_str = "", name_str=None):
         kwargs["step"] = get_number(step_str[1:].strip())
     if name_str is not None:
         kwargs["name"] = name_str
+        
     return Slider(label, **kwargs)
 
 def topping_from_string_image(m, name_str=None):
     path, extension = m.groups()
     kwargs = {}
-    if name_str is not None:
+    if name_str is not None and len(name_str) > 0:
         kwargs["name"] = name_str
     return ImageView(path+"."+extension, **kwargs)
+
+def topping_from_list(obj):
+    if any([isinstance(x, Topping) for x in obj]):
+        return Row(obj)
+    if any([isinstance(x, Topping) for x in obj]):
+        return Row(obj)
