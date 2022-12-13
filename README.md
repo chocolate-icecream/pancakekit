@@ -2,6 +2,8 @@
 
 Pancake Kit aims to provide a handy user interface to your Python codes. It provides GUI as a lightweight web app powered by Flask. 
 
+<img src="https://raw.githubusercontent.com/chocolate-icecream/pancakekit/main/images/pancakekit_figure_at_glance.png" with="200"/>
+
 ## Installation
 
 ```shell
