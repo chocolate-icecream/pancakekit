@@ -6,7 +6,7 @@ Pancake Kit aims to provide a handy user interface to your Python codes. It prov
 
 
 
-## ()Installation
+## Installation
 
 ```shell
 pip3 install pancakekit
