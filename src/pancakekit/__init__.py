@@ -1,6 +1,6 @@
 from .pancakekit import Plate, Cake, Pancake, Topping, Tag, NameManager, RecipeBook, MagicPancake
 
-from .pancakekit import MagicCard, Card, FloatingCard
+from .pancakekit import MagicCard, Card, FloatingCard, Arrangement
 
 from .toppings.basic import Button, Label, Text, Input, DictInput, Slider, Row, Column
 from .toppings.image import ImageView, ImageCard

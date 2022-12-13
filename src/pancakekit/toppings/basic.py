@@ -1,7 +1,7 @@
 import os, ast
 import traceback
 from typing import Optional, Union, Any
-from ..pancakekit import Topping, Tag
+from ..pancakekit import Topping, Tag, Arrangement
 from ..utils import get_number, pk_wrapped_dict
 
 
@@ -225,20 +225,15 @@ class DictInput(Topping):
             return_str += f"{key}:{item.value}" + os.linesep
         return return_str
 
-class Row(Topping):
+class Row(Arrangement):
     def __init__(self, toppings:list[Topping]=[], padding:bool=True, **kwargs):
         super().__init__(toppings, padding, **kwargs)
 
     def prepare(self, toppings, padding):
-        self.toppings = []
         self.padding = padding
         from .automatic import topping_from_object
         for topping in toppings:
-            if not isinstance(topping, Topping):
-                topping = topping_from_object(topping)
-                assert topping is not None
             self.add(topping)
-            self.toppings.append(topping)
         
     def html(self):
         css = "w3-row-padding" if self.padding else "w3-row"
@@ -249,7 +244,7 @@ class Row(Topping):
             column.add_html(child)
         return row.render()
 
-class Column(Topping):
+class Column(Arrangement):
     def __init__(self, toppings:list[Topping]=[], centering:bool=True, padding:bool=True, **kwargs):
         super().__init__(toppings, centering, padding, **kwargs)
         

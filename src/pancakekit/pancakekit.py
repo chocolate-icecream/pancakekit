@@ -583,17 +583,15 @@ class Cake():
                 response[topping_id] = {"revision":self._topping_revisions[topping_id]["revision"], "content":self._topping_revisions[topping_id]["topping"].html(), "function_call": list(self.functions_to_call.values())}
         return response
     
-    
-    def add(self, topping, name=None, storaged=False):
-        if not isinstance(topping, Topping):
-            from .toppings.automatic import topping_from_object
-            topping = topping_from_object(topping)
-            if topping is None:
-                self.plate.logger.error("Incompatible object.")
-                return None
+    def register_topping(self, topping, name=None, skip_rendering=False):
         name = self.name_manager.unique_name(topping if name is None else name)
         self.toppings[name] = topping
-        self.topping_order.append(name)
+        if not skip_rendering:
+            self.topping_order.append(name)
+    
+    def add(self, topping, name=None, storaged=False):
+        topping = input_topping_converter(topping, self.plate.logger)
+        self.register_topping(topping, name=name)
         topping.set_cake(self, uid=f"{self.name}.{name}", name=name)
         self.plate.refresh()
         return topping
@@ -809,6 +807,15 @@ class Pancake():
         self.add(FromFunction(func), name=func.__name__)
         return wrapper
 
+    @property
+    def toppings(self):
+        toppings = self._cake.toppings.copy()
+        try:
+            toppings.pop("magic_card")
+        except:
+            pass
+        return toppings
+
     def __call__(self, *args, **kwargs):
         self.show_message(*args, **kwargs)
 
@@ -970,7 +977,7 @@ class Topping():
         self.cake = None
         self.revision = 0
         self.topping_order = []
-        self.child_toppings = {}
+        self.toppings = {}
         self.function_to_call = None
         self._value = None
         self._args = args
@@ -1024,8 +1031,9 @@ class Topping():
         self.cake = cake
         self.uid = uid
         self.name = name
-        for cname, topping in self.child_toppings.items():
+        for cname, topping in self.toppings.items():
             topping.set_cake(self.cake, uid=f"{self.uid}.{cname}", name=cname)
+            self.cake.register_topping(topping, name=cname, skip_rendering=True)
     
         keys = inspect.signature(self.prepare).parameters.keys()
         kwargs = {k: v for k, v in self.arguments.items() if k in keys}
@@ -1060,14 +1068,17 @@ class Topping():
     def html(self):
         return "<p>[topping]</p>"
     
-    def add(self, item, name:str=None):
-        name = self.name_manager.unique_name(item if name is None else name)
-        self.child_toppings[name] = item
+    def add(self, topping, name:str=None): # At this point self.cake can be None.
+        topping = input_topping_converter(topping)
+        name = self.name_manager.unique_name(topping if name is None else name)
+        self.toppings[name] = topping
         self.topping_order.append(name)
-        item.set_cake(self.cake, uid=f"{self.uid}.{name}", name=name)
+        topping.set_cake(self.cake, uid=f"{self.uid}.{name}", name=name)
+        if self.cake is not None:
+            self.cake.register_topping(topping, name=name, skip_rendering=True)
 
-        item.parent = self
-        return item
+        topping.parent = self
+        return topping
 
     def remove(self, topping_name):
         if topping_name in self.topping_order:
@@ -1124,7 +1135,7 @@ class Topping():
     def child_htmls(self):
         htmls = []
         for name in self.topping_order:
-            htmls.append(self.child_toppings[name].render())
+            htmls.append(self.toppings[name].render())
         return htmls
         
     @property
@@ -1195,7 +1206,7 @@ class Topping():
         for k, v in self.arguments.items():
             args += f",{k}={v}"
         script += "("+args+")"
-        return script
+        return script    
     
     def prepare(self, request: dict):
         return
@@ -1211,6 +1222,13 @@ class Topping():
     
     def value_getter(self): # Method to be overrode for a custom topping
         return self._value
+
+class Arrangement(Topping):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def value_getter(self):
+        return pk_wrapped_dict(lambda: self.cake.plate.logger.error("Cannot set values."), self.toppings)
 
 
 class Card(Topping):
@@ -1388,7 +1406,7 @@ class Variables():
     
 class MagicPancake():
     SHARED = {}
-    RESERVED = ("SHARED", "plate", "toppings", "_current")
+    RESERVED = ("SHARED", "plate", "_current")
     def __init__(self, plate=None):
         if plate is None:
             cake = Pancake()
@@ -1403,24 +1421,6 @@ class MagicPancake():
             self.plate.logger.error("Current cake is not a pancake.")
             return
         return pancake
-    
-    @property
-    def toppings(self):
-        named_toppings = {name: self._current._cake.toppings[name] for name in self._current._cake.topping_order}
-        for k, v in vars(self._current).items():
-            if isinstance(v, Topping):
-                named_toppings[k] = v
-
-        topping_list_dict = {}
-        for name, topping in named_toppings.items():
-            if isinstance(topping, FloatingCard):
-                continue
-            cls = type(topping).__name__
-            if cls not in topping_list_dict:
-                topping_list_dict[cls] = []
-            topping_list_dict[cls].append(name)
-        return topping_list_dict
-        
     
     def __call__(self, *args, **kwargs):
         self.plate.show_message(*args, **kwargs)
@@ -1466,3 +1466,14 @@ class Kitchen(Pancake):
     def new_cake(self):
         Pancake(self.plate, name=self.cake_name.value)
         self.plate.reload()
+
+def input_topping_converter(topping, logger=None):
+    if not isinstance(topping, Topping):
+        from .toppings.automatic import topping_from_object
+        topping = topping_from_object(topping)
+        if topping is None:
+            if logger is not None:
+                logger.error("Incompatible object.")
+            return None
+        return topping
+    return topping
