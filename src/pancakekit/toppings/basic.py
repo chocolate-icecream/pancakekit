@@ -98,7 +98,7 @@ class Input(Topping):
         self.user_input.style = style
 
     def html(self):
-        div = Tag("div", style={"display": "flex", "flex-flow": "column"})
+        div = Tag("div")
         if self.label is not None:
             label = div.add("div", {"class": "w3-left w3-small w3-monospace"})
             label.add_html(self.label)
