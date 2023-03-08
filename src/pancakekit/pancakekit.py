@@ -181,7 +181,7 @@ class Plate():
         self.cake = Cake(self, "_plate_", hidden=True)
 
     
-    def serve(self, wait_done=True, debug=False, host:str="127.0.0.1", port:int=8000):
+    def serve(self, wait_done=True, debug=False, host:str="127.0.0.1", port:int=8000, interactive=False):
         self.host = host
         self.port = port
         self.url = f"http://{self.host}:{self.port}"
@@ -197,10 +197,15 @@ class Plate():
         self.run_server()
         time.sleep(1)
         self.logger.info(f"Go to: http://{self.host}:{self.port}/")
-        if wait_done:
+        if wait_done and not interactive:
             self.wait_done()
-        if is_mode_interactive():
+
+        if is_mode_interactive() or interactive:
             webbrowser.open(f"http://{self.host}:{self.port}/")
+
+        if interactive:
+            import code
+            code.interact(local=globals())
     
     @new_thread
     def run_server(self):
@@ -793,9 +798,9 @@ class Pancake():
             return
         self._cake.clear_all()
     
-    def serve(self, wait_done: bool=True, port: int=8000):
+    def serve(self, wait_done: bool=True, port: int=8000, interactive=False):
         if self.plate is not None:
-            self.plate.serve(wait_done=wait_done, port=port)
+            self.plate.serve(wait_done=wait_done, port=port, interactive=interactive)
     
     def __getitem__(self, name):
         if self._cake is None:
