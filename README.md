@@ -29,6 +29,12 @@ cake.serve()		# Step 3: Serve the cake.
 
 When you open `http://127.0.0.1:8000/` in a web browser, you will find an input box for entering `n` and a button that invokes `fibonacci()`.
 
+### Adding an interface to your exisiting python script in an instant
+
+```shell
+pip -m pancakekit __YOUR_SCRIPT_FILE_NAME__
+```
+
 ### Adding toppings
 
 In Pancake Kit, a Pancake instance corresponds to a single web page. Each UI component is added to the pancake as a Topping instance. 
